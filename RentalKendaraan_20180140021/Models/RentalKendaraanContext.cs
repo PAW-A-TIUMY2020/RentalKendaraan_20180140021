@@ -177,19 +177,19 @@ namespace RentalKendaraan_20180140021.Models
                     .HasColumnName("Tgl_Peminjaman")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.IdPeminjamanNavigation)
+                entity.HasOne(d => d.IdCustomerNavigation)
                     .WithOne(p => p.Peminjaman)
                     .HasForeignKey<Peminjaman>(d => d.IdPeminjaman)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Peminjaman_Customer");
 
-                entity.HasOne(d => d.IdPeminjaman1)
+                entity.HasOne(d => d.IdJaminanNavigation)
                     .WithOne(p => p.Peminjaman)
                     .HasForeignKey<Peminjaman>(d => d.IdPeminjaman)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Peminjaman_Jaminan");
 
-                entity.HasOne(d => d.IdPeminjaman2)
+                entity.HasOne(d => d.IdKendaraanNavigation)
                     .WithOne(p => p.Peminjaman)
                     .HasForeignKey<Peminjaman>(d => d.IdPeminjaman)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -218,11 +218,7 @@ namespace RentalKendaraan_20180140021.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Pengembalian_Kondisi_Kendaraan");
 
-                entity.HasOne(d => d.IdPengembalian1)
-                    .WithOne(p => p.Pengembalian)
-                    .HasForeignKey<Pengembalian>(d => d.IdPengembalian)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Pengembalian_Peminjaman");
+               
             });
         }
     }

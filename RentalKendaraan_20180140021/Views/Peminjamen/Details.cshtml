@@ -41,22 +41,22 @@
             @Html.DisplayFor(model => model.Biaya)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.IdPeminjaman1)
+            @Html.DisplayNameFor(model => model.IdCustomerNavigation)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IdPeminjaman1.IdJaminan)
+            @Html.DisplayFor(model => model.IdCustomerNavigation.IdCustomer)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.IdPeminjaman2)
+            @Html.DisplayNameFor(model => model.IdJaminanNavigation)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IdPeminjaman2.IdKendaraan)
+            @Html.DisplayFor(model => model.IdJaminanNavigation.IdJaminan)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.IdPeminjamanNavigation)
+            @Html.DisplayNameFor(model => model.IdKendaraanNavigation)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IdPeminjamanNavigation.IdCustomer)
+            @Html.DisplayFor(model => model.IdKendaraanNavigation.IdKendaraan)
         </dd>
     </dl>
 </div>

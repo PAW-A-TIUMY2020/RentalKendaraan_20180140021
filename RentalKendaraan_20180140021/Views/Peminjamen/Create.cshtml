@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2>Tambah Data</h2>
 
 <h4>Peminjaman</h4>
 <hr />
@@ -18,19 +18,19 @@
                 <span asp-validation-for="TglPeminjaman" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdKendaraan" class="control-label"></label>
-                <input asp-for="IdKendaraan" class="form-control" />
-                <span asp-validation-for="IdKendaraan" class="text-danger"></span>
+                <label asp-for="IdKendaraanNavigation.NamaKendaraan" class="control-label"></label>
+                <input asp-for="IdKendaraanNavigation.NamaKendaraan" class="form-control" />
+                <span asp-validation-for="IdKendaraanNavigation.NamaKendaraan" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdCustomer" class="control-label"></label>
-                <input asp-for="IdCustomer" class="form-control" />
-                <span asp-validation-for="IdCustomer" class="text-danger"></span>
+                <label asp-for="IdCustomerNavigation.NamaCostumer" class="control-label"></label>
+                <input asp-for="IdCustomerNavigation.NamaCostumer" class="form-control" />
+                <span asp-validation-for="IdCustomerNavigation.NamaCostumer" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdJaminan" class="control-label"></label>
-                <input asp-for="IdJaminan" class="form-control" />
-                <span asp-validation-for="IdJaminan" class="text-danger"></span>
+                <label asp-for="IdJaminanNavigation.NamaJaminan" class="control-label"></label>
+                <input asp-for="IdJaminanNavigation.NamaJaminan" class="form-control" />
+                <span asp-validation-for="IdJaminanNavigation.NamaJaminan" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Biaya" class="control-label"></label>
@@ -38,14 +38,14 @@
                 <span asp-validation-for="Biaya" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Submit" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali</a>
 </div>
 
 @section Scripts {
