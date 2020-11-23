@@ -32,7 +32,7 @@ namespace RentalKendaraan_20180140021
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<Models.RentalKendaraanContext>(options =>
+            services.AddDbContext<Models.RentalKendaraannContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
 

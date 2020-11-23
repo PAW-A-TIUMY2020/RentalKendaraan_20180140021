@@ -11,17 +11,32 @@ namespace RentalKendaraan_20180140021.Controllers
 {
     public class GendersController : Controller
     {
-        private readonly RentalKendaraanContext _context;
+        private readonly RentalKendaraannContext _context;
 
-        public GendersController(RentalKendaraanContext context)
+        public GendersController(RentalKendaraannContext context)
         {
             _context = context;
         }
 
         // GET: Genders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string nmagdr, string searchString)
         {
-            return View(await _context.Gender.ToListAsync());
+            var nmagdrList = new List<string>();
+            var nmagdrQuery = from d in _context.Gender orderby d.NamaGender select d.NamaGender;
+            nmagdrList.AddRange(nmagdrQuery.Distinct());
+            ViewBag.nmagdr = new SelectList(nmagdrList);
+            var menu = from m in _context.Gender.Include(k => k.Customer) select m;
+            if (!string.IsNullOrEmpty(nmagdr))
+            {
+                menu = menu.Where(x => x.NamaGender == nmagdr);
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                menu = menu.Where(s => s.NamaGender.Contains(searchString));
+            }
+
+            return View(await menu.ToListAsync());
+
         }
 
         // GET: Genders/Details/5

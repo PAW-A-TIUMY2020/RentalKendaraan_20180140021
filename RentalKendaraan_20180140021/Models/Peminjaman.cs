@@ -12,7 +12,6 @@ namespace RentalKendaraan_20180140021.Models
         }
 
         public int IdPeminjaman { get; set; }
-        [Required(ErrorMessage = "Tanggal Peminjaman tidak boleh kosong")]
         public DateTime? TglPeminjaman { get; set; }
         [Required(ErrorMessage = "Nama Kendaraan tidak boleh kosong")]
         public int? IdKendaraan { get; set; }
@@ -20,7 +19,7 @@ namespace RentalKendaraan_20180140021.Models
         public int? IdCustomer { get; set; }
         [Required(ErrorMessage = "Nama Jaminan tidak boleh kosong")]
         public int? IdJaminan { get; set; }
-
+        [Required(ErrorMessage = "Biaya tidak boleh kosong")]
         public int? Biaya { get; set; }
 
         public Customer IdCustomerNavigation { get; set; }

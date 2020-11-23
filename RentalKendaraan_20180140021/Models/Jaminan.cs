@@ -6,10 +6,15 @@ namespace RentalKendaraan_20180140021.Models
 {
     public partial class Jaminan
     {
+        public Jaminan()
+        {
+            Peminjaman = new HashSet<Peminjaman>();
+        }
+
         public int IdJaminan { get; set; }
         [Required(ErrorMessage = "Nama Jaminan tidak boleh kosong")]
         public string NamaJaminan { get; set; }
 
-        public Peminjaman Peminjaman { get; set; }
+        public ICollection<Peminjaman> Peminjaman { get; set; }
     }
 }

@@ -17,43 +17,25 @@
             @Html.DisplayFor(model => model.TglPeminjaman)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.IdKendaraan)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IdKendaraan)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IdCustomer)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IdCustomer)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IdJaminan)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IdJaminan)
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.Biaya)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Biaya)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.IdCustomerNavigation)
+            @Html.DisplayName("Nama Customer")
         </dt>
         <dd>
             @Html.DisplayFor(model => model.IdCustomerNavigation.IdCustomer)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.IdJaminanNavigation)
+            @Html.DisplayName("Nama Jaminan")
         </dt>
         <dd>
             @Html.DisplayFor(model => model.IdJaminanNavigation.IdJaminan)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.IdKendaraanNavigation)
+            @Html.DisplayName("Nama Kendaraan")
         </dt>
         <dd>
             @Html.DisplayFor(model => model.IdKendaraanNavigation.IdKendaraan)
@@ -61,6 +43,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.IdPeminjaman">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.IdPeminjaman">Ubah</a> |
+    <a asp-action="Index">Kembali</a>
 </div>

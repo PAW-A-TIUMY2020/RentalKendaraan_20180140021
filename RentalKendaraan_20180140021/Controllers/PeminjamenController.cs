@@ -11,18 +11,32 @@ namespace RentalKendaraan_20180140021.Controllers
 {
     public class PeminjamenController : Controller
     {
-        private readonly RentalKendaraanContext _context;
+        private readonly RentalKendaraannContext _context;
 
-        public PeminjamenController(RentalKendaraanContext context)
+        public PeminjamenController(RentalKendaraannContext context)
         {
             _context = context;
         }
 
         // GET: Peminjamen
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string pmjm, string searchString)
         {
-            var rentalKendaraanContext = _context.Peminjaman.Include(p => p.IdCustomerNavigation).Include(p => p.IdJaminanNavigation).Include(p => p.IdKendaraanNavigation);
-            return View(await rentalKendaraanContext.ToListAsync());
+            var pmjmList = new List<string>();
+            var pmjmQuery = from d in _context.Peminjaman orderby d.IdPeminjaman select d.IdPeminjaman.ToString();
+            pmjmList.AddRange(pmjmQuery.Distinct());
+            ViewBag.pmjm = new SelectList(pmjmList);
+            var menu = from m in _context.Peminjaman.Include(k => k.IdCustomerNavigation).Include(k => k.IdJaminanNavigation).Include(k => k.IdKendaraanNavigation) select m;
+            if (!string.IsNullOrEmpty(pmjm))
+            {
+                menu = menu.Where(x => x.IdPeminjaman.ToString() == pmjm);
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                menu = menu.Where(s => s.TglPeminjaman.ToString().Contains(searchString));
+            }
+
+            return View(await menu.ToListAsync());
+
         }
 
         // GET: Peminjamen/Details/5
@@ -49,9 +63,9 @@ namespace RentalKendaraan_20180140021.Controllers
         // GET: Peminjamen/Create
         public IActionResult Create()
         {
-            ViewData["IdPeminjaman"] = new SelectList(_context.Customer, "IdCustomer", "IdCustomer");
-            ViewData["IdPeminjaman"] = new SelectList(_context.Jaminan, "IdJaminan", "IdJaminan");
-            ViewData["IdPeminjaman"] = new SelectList(_context.Kendaraan, "IdKendaraan", "IdKendaraan");
+            ViewData["IdCustomer"] = new SelectList(_context.Customer, "IdCustomer", "NamaCustomer");
+            ViewData["IdJaminan"] = new SelectList(_context.Jaminan, "IdJaminan", "NamaJaminan");
+            ViewData["IdKendaraan"] = new SelectList(_context.Kendaraan, "IdKendaraan", "NamaKendaraan");
             return View();
         }
 
@@ -68,9 +82,9 @@ namespace RentalKendaraan_20180140021.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdPeminjaman"] = new SelectList(_context.Customer, "IdCustomer", "IdCustomer", peminjaman.IdPeminjaman);
-            ViewData["IdPeminjaman"] = new SelectList(_context.Jaminan, "IdJaminan", "IdJaminan", peminjaman.IdPeminjaman);
-            ViewData["IdPeminjaman"] = new SelectList(_context.Kendaraan, "IdKendaraan", "IdKendaraan", peminjaman.IdPeminjaman);
+            ViewData["IdCustomer"] = new SelectList(_context.Customer, "IdCustomer", "IdCustomer", peminjaman.IdCustomer);
+            ViewData["IdJaminan"] = new SelectList(_context.Jaminan, "IdJaminan", "IdJaminan", peminjaman.IdJaminan);
+            ViewData["IdKendaraan"] = new SelectList(_context.Kendaraan, "IdKendaraan", "IdKendaraan", peminjaman.IdKendaraan);
             return View(peminjaman);
         }
 
@@ -87,9 +101,9 @@ namespace RentalKendaraan_20180140021.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdPeminjaman"] = new SelectList(_context.Customer, "IdCustomer", "IdCustomer", peminjaman.IdPeminjaman);
-            ViewData["IdPeminjaman"] = new SelectList(_context.Jaminan, "IdJaminan", "IdJaminan", peminjaman.IdPeminjaman);
-            ViewData["IdPeminjaman"] = new SelectList(_context.Kendaraan, "IdKendaraan", "IdKendaraan", peminjaman.IdPeminjaman);
+            ViewData["IdCustomer"] = new SelectList(_context.Customer, "IdCustomer", "IdCustomer", peminjaman.IdCustomer);
+            ViewData["IdJaminan"] = new SelectList(_context.Jaminan, "IdJaminan", "IdJaminan", peminjaman.IdJaminan);
+            ViewData["IdKendaraan"] = new SelectList(_context.Kendaraan, "IdKendaraan", "IdKendaraan", peminjaman.IdKendaraan);
             return View(peminjaman);
         }
 
@@ -125,9 +139,9 @@ namespace RentalKendaraan_20180140021.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdPeminjaman"] = new SelectList(_context.Customer, "IdCustomer", "IdCustomer", peminjaman.IdPeminjaman);
-            ViewData["IdPeminjaman"] = new SelectList(_context.Jaminan, "IdJaminan", "IdJaminan", peminjaman.IdPeminjaman);
-            ViewData["IdPeminjaman"] = new SelectList(_context.Kendaraan, "IdKendaraan", "IdKendaraan", peminjaman.IdPeminjaman);
+            ViewData["IdCustomer"] = new SelectList(_context.Customer, "IdCustomer", "IdCustomer", peminjaman.IdCustomer);
+            ViewData["IdJaminan"] = new SelectList(_context.Jaminan, "IdJaminan", "IdJaminan", peminjaman.IdJaminan);
+            ViewData["IdKendaraan"] = new SelectList(_context.Kendaraan, "IdKendaraan", "IdKendaraan", peminjaman.IdKendaraan);
             return View(peminjaman);
         }
 

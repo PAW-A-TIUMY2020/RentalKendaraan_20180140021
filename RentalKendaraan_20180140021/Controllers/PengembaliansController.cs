@@ -11,18 +11,32 @@ namespace RentalKendaraan_20180140021.Controllers
 {
     public class PengembaliansController : Controller
     {
-        private readonly RentalKendaraanContext _context;
+        private readonly RentalKendaraannContext _context;
 
-        public PengembaliansController(RentalKendaraanContext context)
+        public PengembaliansController(RentalKendaraannContext context)
         {
             _context = context;
         }
 
         // GET: Pengembalians
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string kmb, string searchString)
         {
-            var rentalKendaraanContext = _context.Pengembalian.Include(p => p.IdPengembalian1).Include(p => p.IdPengembalianNavigation);
-            return View(await rentalKendaraanContext.ToListAsync());
+            var kmbList = new List<string>();
+            var kmbQuery = from d in _context.Pengembalian orderby d.IdPeminjaman select d.IdPeminjaman.ToString();
+            kmbList.AddRange(kmbQuery.Distinct());
+            ViewBag.kmb = new SelectList(kmbList);
+            var menu = from m in _context.Pengembalian.Include(k => k.IdPeminjamanNavigation) select m;
+            if (!string.IsNullOrEmpty(kmb))
+            {
+                menu = menu.Where(x => x.IdPeminjaman.ToString() == kmb);
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                menu = menu.Where(s => s.IdKondisi.ToString().Contains(searchString) || s.Denda.ToString().Contains(searchString)
+               || s.TglPengembalian.ToString().Contains(searchString));
+            }
+
+            return View(await menu.ToListAsync());
         }
 
         // GET: Pengembalians/Details/5
@@ -34,8 +48,8 @@ namespace RentalKendaraan_20180140021.Controllers
             }
 
             var pengembalian = await _context.Pengembalian
-                .Include(p => p.IdPengembalian1)
-                .Include(p => p.IdPengembalianNavigation)
+                .Include(p => p.IdKondisiNavigation)
+                .Include(p => p.IdPeminjamanNavigation)
                 .FirstOrDefaultAsync(m => m.IdPengembalian == id);
             if (pengembalian == null)
             {
@@ -48,8 +62,8 @@ namespace RentalKendaraan_20180140021.Controllers
         // GET: Pengembalians/Create
         public IActionResult Create()
         {
-            ViewData["IdPengembalian"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman");
-            ViewData["IdPengembalian"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "IdKondisi");
+            ViewData["IdKondisi"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "NamaKondisi");
+            ViewData["IdPeminjaman"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman");
             return View();
         }
 
@@ -66,8 +80,8 @@ namespace RentalKendaraan_20180140021.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdPengembalian"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman", pengembalian.IdPengembalian);
-            ViewData["IdPengembalian"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "IdKondisi", pengembalian.IdPengembalian);
+            ViewData["IdKondisi"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "IdKondisi", pengembalian.IdKondisi);
+            ViewData["IdPeminjaman"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman", pengembalian.IdPeminjaman);
             return View(pengembalian);
         }
 
@@ -84,8 +98,8 @@ namespace RentalKendaraan_20180140021.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdPengembalian"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman", pengembalian.IdPengembalian);
-            ViewData["IdPengembalian"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "IdKondisi", pengembalian.IdPengembalian);
+            ViewData["IdKondisi"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "IdKondisi", pengembalian.IdKondisi);
+            ViewData["IdPeminjaman"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman", pengembalian.IdPeminjaman);
             return View(pengembalian);
         }
 
@@ -121,8 +135,8 @@ namespace RentalKendaraan_20180140021.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdPengembalian"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman", pengembalian.IdPengembalian);
-            ViewData["IdPengembalian"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "IdKondisi", pengembalian.IdPengembalian);
+            ViewData["IdKondisi"] = new SelectList(_context.KondisiKendaraan, "IdKondisi", "IdKondisi", pengembalian.IdKondisi);
+            ViewData["IdPeminjaman"] = new SelectList(_context.Peminjaman, "IdPeminjaman", "IdPeminjaman", pengembalian.IdPeminjaman);
             return View(pengembalian);
         }
 
@@ -135,8 +149,8 @@ namespace RentalKendaraan_20180140021.Controllers
             }
 
             var pengembalian = await _context.Pengembalian
-                .Include(p => p.IdPengembalian1)
-                .Include(p => p.IdPengembalianNavigation)
+                .Include(p => p.IdKondisiNavigation)
+                .Include(p => p.IdPeminjamanNavigation)
                 .FirstOrDefaultAsync(m => m.IdPengembalian == id);
             if (pengembalian == null)
             {

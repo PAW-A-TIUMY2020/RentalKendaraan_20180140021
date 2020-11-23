@@ -11,17 +11,32 @@ namespace RentalKendaraan_20180140021.Controllers
 {
     public class JenisKendaraansController : Controller
     {
-        private readonly RentalKendaraanContext _context;
+        private readonly RentalKendaraannContext _context;
 
-        public JenisKendaraansController(RentalKendaraanContext context)
+        public JenisKendaraansController(RentalKendaraannContext context)
         {
             _context = context;
         }
 
         // GET: JenisKendaraans
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string jns, string searchString)
         {
-            return View(await _context.JenisKendaraan.ToListAsync());
+            var jnsList = new List<string>();
+            var jnsQuery = from d in _context.JenisKendaraan orderby d.NamaJenisKendaraan select d.NamaJenisKendaraan;
+            jnsList.AddRange(jnsQuery.Distinct());
+            ViewBag.jns = new SelectList(jnsList);
+            var menu = from m in _context.JenisKendaraan.Include(k => k.Kendaraan) select m;
+            if (!string.IsNullOrEmpty(jns))
+            {
+                menu = menu.Where(x => x.NamaJenisKendaraan == jns);
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                menu = menu.Where(s => s.NamaJenisKendaraan.Contains(searchString));
+            }
+
+            return View(await menu.ToListAsync());
+
         }
 
         // GET: JenisKendaraans/Details/5

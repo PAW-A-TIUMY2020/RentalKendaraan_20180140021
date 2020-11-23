@@ -11,20 +11,34 @@ namespace RentalKendaraan_20180140021.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly RentalKendaraanContext _context;
+        private readonly RentalKendaraannContext _context;
 
-        public CustomersController(RentalKendaraanContext context)
+        public CustomersController(RentalKendaraannContext context)
         {
             _context = context;
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string cstmr, string searchString)
         {
-            var rentalKendaraanContext = _context.Customer.Include(c => c.IdCustomerNavigation);
-            return View(await rentalKendaraanContext.ToListAsync());
-        }
+            var cstmrList = new List<string>();
+            var cstmrQuery = from d in _context.Customer orderby d.Alamat select d.Alamat;
+            cstmrList.AddRange(cstmrQuery.Distinct());
+            ViewBag.cstmr = new SelectList(cstmrList);
+            var menu = from m in _context.Customer.Include(k => k.IdGenderNavigation) select m;
+            if (!string.IsNullOrEmpty(cstmr))
+            {
+                menu = menu.Where(x => x.Alamat == cstmr);
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                menu = menu.Where(s => s.Nik.Contains(searchString) || s.NamaCustomer.Contains(searchString)
+               || s.NoHp.Contains(searchString));
+            }
 
+            return View(await menu.ToListAsync());
+
+        }
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -34,7 +48,7 @@ namespace RentalKendaraan_20180140021.Controllers
             }
 
             var customer = await _context.Customer
-                .Include(c => c.IdCustomerNavigation)
+                .Include(c => c.IdGenderNavigation)
                 .FirstOrDefaultAsync(m => m.IdCustomer == id);
             if (customer == null)
             {
@@ -47,7 +61,7 @@ namespace RentalKendaraan_20180140021.Controllers
         // GET: Customers/Create
         public IActionResult Create()
         {
-            ViewData["IdCustomer"] = new SelectList(_context.Gender, "IdGender", "IdGender");
+            ViewData["IdGender"] = new SelectList(_context.Gender, "IdGender", "NamaGender");
             return View();
         }
 
@@ -56,7 +70,7 @@ namespace RentalKendaraan_20180140021.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCustomer,NamaCostumer,Nik,Alamat,NoHp,IdGender")] Customer customer)
+        public async Task<IActionResult> Create([Bind("IdCustomer,NamaCustomer,Nik,Alamat,NoHp,IdGender")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -64,7 +78,7 @@ namespace RentalKendaraan_20180140021.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCustomer"] = new SelectList(_context.Gender, "IdGender", "IdGender", customer.IdCustomer);
+            ViewData["IdGender"] = new SelectList(_context.Gender, "IdGender", "IdGender", customer.IdGender);
             return View(customer);
         }
 
@@ -81,7 +95,7 @@ namespace RentalKendaraan_20180140021.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdCustomer"] = new SelectList(_context.Gender, "IdGender", "IdGender", customer.IdCustomer);
+            ViewData["IdGender"] = new SelectList(_context.Gender, "IdGender", "IdGender", customer.IdGender);
             return View(customer);
         }
 
@@ -90,7 +104,7 @@ namespace RentalKendaraan_20180140021.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdCustomer,NamaCostumer,Nik,Alamat,NoHp,IdGender")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("IdCustomer,NamaCustomer,Nik,Alamat,NoHp,IdGender")] Customer customer)
         {
             if (id != customer.IdCustomer)
             {
@@ -117,7 +131,7 @@ namespace RentalKendaraan_20180140021.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCustomer"] = new SelectList(_context.Gender, "IdGender", "IdGender", customer.IdCustomer);
+            ViewData["IdGender"] = new SelectList(_context.Gender, "IdGender", "IdGender", customer.IdGender);
             return View(customer);
         }
 
@@ -130,7 +144,7 @@ namespace RentalKendaraan_20180140021.Controllers
             }
 
             var customer = await _context.Customer
-                .Include(c => c.IdCustomerNavigation)
+                .Include(c => c.IdGenderNavigation)
                 .FirstOrDefaultAsync(m => m.IdCustomer == id);
             if (customer == null)
             {

@@ -11,18 +11,32 @@ namespace RentalKendaraan_20180140021.Controllers
 {
     public class KendaraansController : Controller
     {
-        private readonly RentalKendaraanContext _context;
+        private readonly RentalKendaraannContext _context;
 
-        public KendaraansController(RentalKendaraanContext context)
+        public KendaraansController(RentalKendaraannContext context)
         {
             _context = context;
         }
 
         // GET: Kendaraans
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string ktsd, string searchString)
         {
-            var rentalKendaraanContext = _context.Kendaraan.Include(k => k.IdKendaraanNavigation);
-            return View(await rentalKendaraanContext.ToListAsync());
+            var ktsdList = new List<string>();
+            var ktsdQuery = from d in _context.Kendaraan orderby d.Ketersediaan select d.Ketersediaan;
+            ktsdList.AddRange(ktsdQuery.Distinct());
+            ViewBag.ktsd = new SelectList(ktsdList);
+            var menu = from m in _context.Kendaraan.Include(k => k.IdJenisKendaraanNavigation) select m;
+            if (!string.IsNullOrEmpty(ktsd))
+            {
+                menu = menu.Where(x => x.Ketersediaan == ktsd);
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                menu = menu.Where(s => s.NoPolisi.Contains(searchString) || s.NamaKendaraan.Contains(searchString)
+               || s.NoStnk.Contains(searchString));
+            }
+
+            return View(await menu.ToListAsync());
         }
 
         // GET: Kendaraans/Details/5
@@ -34,7 +48,7 @@ namespace RentalKendaraan_20180140021.Controllers
             }
 
             var kendaraan = await _context.Kendaraan
-                .Include(k => k.IdKendaraanNavigation)
+                .Include(k => k.IdJenisKendaraanNavigation)
                 .FirstOrDefaultAsync(m => m.IdKendaraan == id);
             if (kendaraan == null)
             {
@@ -47,7 +61,7 @@ namespace RentalKendaraan_20180140021.Controllers
         // GET: Kendaraans/Create
         public IActionResult Create()
         {
-            ViewData["IdKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "IdJenisKendaraan");
+            ViewData["IdJenisKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "NamaJenisKendaraan");
             return View();
         }
 
@@ -64,7 +78,7 @@ namespace RentalKendaraan_20180140021.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "IdJenisKendaraan", kendaraan.IdKendaraan);
+            ViewData["IdJenisKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "IdJenisKendaraan", kendaraan.IdJenisKendaraan);
             return View(kendaraan);
         }
 
@@ -81,7 +95,7 @@ namespace RentalKendaraan_20180140021.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "IdJenisKendaraan", kendaraan.IdKendaraan);
+            ViewData["IdJenisKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "IdJenisKendaraan", kendaraan.IdJenisKendaraan);
             return View(kendaraan);
         }
 
@@ -117,7 +131,7 @@ namespace RentalKendaraan_20180140021.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "IdJenisKendaraan", kendaraan.IdKendaraan);
+            ViewData["IdJenisKendaraan"] = new SelectList(_context.JenisKendaraan, "IdJenisKendaraan", "IdJenisKendaraan", kendaraan.IdJenisKendaraan);
             return View(kendaraan);
         }
 
@@ -130,7 +144,7 @@ namespace RentalKendaraan_20180140021.Controllers
             }
 
             var kendaraan = await _context.Kendaraan
-                .Include(k => k.IdKendaraanNavigation)
+                .Include(k => k.IdJenisKendaraanNavigation)
                 .FirstOrDefaultAsync(m => m.IdKendaraan == id);
             if (kendaraan == null)
             {
