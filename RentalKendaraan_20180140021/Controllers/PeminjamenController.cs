@@ -19,7 +19,7 @@ namespace RentalKendaraan_20180140021.Controllers
         }
 
         // GET: Peminjamen
-        public async Task<IActionResult> Index(string pmjm, string searchString)
+        public async Task<IActionResult> Index(string pmjm, string searchString, string sortOrder, string currentFilter, int? pageNumber)
         {
             var pmjmList = new List<string>();
             var pmjmQuery = from d in _context.Peminjaman orderby d.IdPeminjaman select d.IdPeminjaman.ToString();
@@ -34,6 +34,22 @@ namespace RentalKendaraan_20180140021.Controllers
             {
                 menu = menu.Where(s => s.TglPeminjaman.ToString().Contains(searchString));
             }
+
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            int pageSize = 5;
+            return View(await PaginatedList<Peminjaman>.CreateAsync(menu.AsNoTracking(), pageNumber ?? 1, pageSize));
 
             return View(await menu.ToListAsync());
 
