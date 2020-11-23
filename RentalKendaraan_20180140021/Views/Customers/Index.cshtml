@@ -22,7 +22,8 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Nama Customer")
+                @*Html.DisplayName("Nama Customer")*@
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Nama Customer</a>
             </th>
             <th>
                 @Html.DisplayName("NIK")
@@ -35,6 +36,7 @@
             </th>
             <th>
                 @Html.DisplayName("Gender")
+               
             </th>
             <th></th>
         </tr>

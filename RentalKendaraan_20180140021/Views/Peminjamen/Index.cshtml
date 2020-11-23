@@ -22,13 +22,15 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Tanggal Peminjaman")
+                @*Html.DisplayName("Tanggal Peminjaman")*@
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Tanggal Peminjaman</a>
             </th>
             <th>
                 @Html.DisplayName("Biaya")
             </th>
             <th>
-                @Html.DisplayName("Nama Customer")
+                @*Html.DisplayName("Nama Customer")*@
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Nama Customer</a>
             </th>
             <th>
                 @Html.DisplayName("Jaminan")

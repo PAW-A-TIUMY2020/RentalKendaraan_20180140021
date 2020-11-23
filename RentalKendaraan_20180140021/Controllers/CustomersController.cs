@@ -50,8 +50,21 @@ namespace RentalKendaraan_20180140021.Controllers
             ViewData["CurrentFilter"] = searchString;
             int pageSize = 5;
 
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    menu = menu.OrderByDescending(s => s.NamaCustomer);
+                    break;
+                default:
+                    menu = menu.OrderBy(s => s.NamaCustomer);
+                    break;
+            }
+
             return View(await PaginatedList<Customer>.CreateAsync(menu.AsNoTracking(), pageNumber ?? 1, pageSize));
 
+            
         }
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)

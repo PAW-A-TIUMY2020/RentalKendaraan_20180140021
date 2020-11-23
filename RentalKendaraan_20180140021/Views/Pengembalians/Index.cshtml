@@ -22,7 +22,8 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Tanggal Pengembalian")
+                @*Html.DisplayName("Tanggal Pengembalian")*@
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Tanggal Pengembalian</a>
             </th>
             <th>
                 @Html.DisplayName("Denda")
@@ -31,7 +32,8 @@
                 @Html.DisplayName("Kondisi")
             </th>
             <th>
-                @Html.DisplayName("ID Peminjam")
+                @*Html.DisplayName("ID Peminjam")*@
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ID Peminjaman</a>
             </th>
             <th></th>
         </tr>
