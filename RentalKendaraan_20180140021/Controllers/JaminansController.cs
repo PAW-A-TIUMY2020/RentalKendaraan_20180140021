@@ -19,7 +19,7 @@ namespace RentalKendaraan_20180140021.Controllers
         }
 
         // GET: Jaminans
-        public async Task<IActionResult> Index(string jmn, string searchString)
+        public async Task<IActionResult> Index(string jmn, string searchString, string sortOrder, string currentFilter, int? pageNumber)
         {
             var jmnList = new List<string>();
             var jmnQuery = from d in _context.Jaminan orderby d.NamaJaminan select d.NamaJaminan;
@@ -34,8 +34,23 @@ namespace RentalKendaraan_20180140021.Controllers
             {
                 menu = menu.Where(s => s.NamaJaminan.Contains(searchString));
             }
+            ViewData["CurrentSort"] = sortOrder;
 
-            return View(await menu.ToListAsync());
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+            int pageSize = 5;
+
+            return View(await PaginatedList<Jaminan>.CreateAsync(menu.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+
 
         }
 

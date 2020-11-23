@@ -19,7 +19,7 @@ namespace RentalKendaraan_20180140021.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index(string cstmr, string searchString)
+        public async Task<IActionResult> Index(string cstmr, string searchString,string sortOrder, string currentFilter, int? pageNumber )
         {
             var cstmrList = new List<string>();
             var cstmrQuery = from d in _context.Customer orderby d.Alamat select d.Alamat;
@@ -36,7 +36,21 @@ namespace RentalKendaraan_20180140021.Controllers
                || s.NoHp.Contains(searchString));
             }
 
-            return View(await menu.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+            int pageSize = 5;
+
+            return View(await PaginatedList<Customer>.CreateAsync(menu.AsNoTracking(), pageNumber ?? 1, pageSize));
 
         }
         // GET: Customers/Details/5

@@ -51,7 +51,7 @@ namespace RentalKendaraan_20180140021.Controllers
             int pageSize = 5;
             return View(await PaginatedList<Peminjaman>.CreateAsync(menu.AsNoTracking(), pageNumber ?? 1, pageSize));
 
-            return View(await menu.ToListAsync());
+         
 
         }
 

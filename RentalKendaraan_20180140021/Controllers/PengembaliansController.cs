@@ -19,7 +19,7 @@ namespace RentalKendaraan_20180140021.Controllers
         }
 
         // GET: Pengembalians
-        public async Task<IActionResult> Index(string kmb, string searchString)
+        public async Task<IActionResult> Index(string kmb, string searchString, string sortOrder, string currentFilter, int? pageNumber)
         {
             var kmbList = new List<string>();
             var kmbQuery = from d in _context.Pengembalian orderby d.IdPeminjaman select d.IdPeminjaman.ToString();
@@ -36,7 +36,23 @@ namespace RentalKendaraan_20180140021.Controllers
                || s.TglPengembalian.ToString().Contains(searchString));
             }
 
-            return View(await menu.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+            int pageSize = 5;
+
+            return View(await PaginatedList<Pengembalian>.CreateAsync(menu.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+            
         }
 
         // GET: Pengembalians/Details/5
